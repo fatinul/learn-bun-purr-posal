@@ -154,7 +154,7 @@ export default function CreateLink() {
                 className="group relative flex items-center justify-center w-12 h-12 bg-white rounded-2xl hover:bg-pink-50 transition-all hover:-rotate-6 shadow-lg"
               >
                 <img
-                  src="/kofi_symbol.svg"
+                  src="purr-posal/kofi_symbol.svg"
                   alt="Ko-fi"
                   className="w-6 h-6 group-hover:scale-110 transition-transform"
                 />
