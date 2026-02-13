@@ -1,0 +1,28 @@
+version: "3.8"
+
+services:
+  purr-posal-backend:
+    container_name: purr-posal-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - FRONTEND_URL=https://bun.tinul.net/purr-posal
+    networks:
+      - bun_network
+    restart: unless-stopped
+
+  purr-posal-frontend:
+    container_name: purr-posal-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    networks:
+      - bun_network
+    restart: unless-stopped
+    depends_on:
+      - purr-posal-backend
+
+networks:
+  bun_network:
+    external: true

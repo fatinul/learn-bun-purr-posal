@@ -5,24 +5,25 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 
 app = FastAPI(title="Valentine Link Generator")
+
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5174")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # In production, replace with your frontend URL
+    allow_origins=["*"],  # In production, you can restrict this
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 @app.get("/create")
-async def create_link(request: Request, title:str, sender: str, receiver: str, message: str):
+async def create_link(request: Request, title: str, sender: str, receiver: str, message: str):
     # Combine strings with a pipe
     raw_string = f"{title}|{receiver}|{sender}|{message}"
     # Base64 Encode
     encoded_bytes = base64.urlsafe_b64encode(raw_string.encode("utf-8"))
     token = encoded_bytes.decode("utf-8")
-    # Generate the link based on the current host
+    # Generate the link based on the frontend URL
     valentine_link = f"{FRONTEND_URL.rstrip('/')}/love/{token}"
     return {
         "status": "success",

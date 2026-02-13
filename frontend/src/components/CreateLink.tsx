@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { api } from '../utils/api';
 
 const LIMITS = {
   title: 18,
@@ -24,9 +25,15 @@ export default function CreateLink() {
   };
 
   const handleGenerate = async () => {
-    const res = await fetch(`http://localhost:8001/create?title=${title}&sender=${sender}&receiver=${receiver}&message=${message}`);
-    const data = await res.json();
-    setGeneratedLink(data.link.replace('8000', '5173'));
+    const baseUrl = window.location.origin;
+
+    try {
+      const data = await api.create(title, sender, receiver, message);
+      const path = new URL(data.link).pathname;
+      setGeneratedLink(`${baseUrl}${path}`);
+    } catch (error) {
+      console.error("Failed to generate link:", error);
+    }
   };
 
   return (
@@ -39,9 +46,9 @@ export default function CreateLink() {
       <div className="flex shadow-2xl items-stretch relative z-10 scale-75 sm:scale-90 md:scale-100 transition-transform rounded-[2rem] overflow-hidden">
 
         {/* LEFT BOX: INPUT FORM */}
-        <div className="bg-white w-80 min-h-[400px] rounded-l-[2rem] flex flex-col p-8 border-4 border-r-0 border-orange-200">
+        <div className="bg-white w-80 min-h-[400px] rounded-l-[2rem] flex flex-col p-8 border-4 border-r-0 border-orange-500">
           <h1 className="text-xl font-black text-orange-400 mb-6 tracking-tighter">
-            The PURR-posal 😼
+            😼 The PURR-posal
           </h1>
           <div className="space-y-4 flex-1">
             {/* TITLE INPUT */}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import confetti from 'canvas-confetti';
+import { api } from '../utils/api';
 
 // --- LOVE BOX PAGE ---
 export default function LoveBox() {
@@ -12,9 +13,9 @@ export default function LoveBox() {
   const [showPaw, setShowPaw] = useState(false);
 
   useEffect(() => {
-    fetch(`http://localhost:8001/love/${token}`)
-      .then(res => res.json())
-      .then(setData);
+    if (token) {
+      api.getLove(token).then(setData);
+    }
   }, [token]);
 
   const handleNo = () => {
@@ -169,4 +170,3 @@ export default function LoveBox() {
     </div >
   );
 };
-
