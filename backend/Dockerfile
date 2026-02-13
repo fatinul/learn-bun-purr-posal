@@ -2,28 +2,45 @@
 FROM python:3.12-slim
 
 # Install uv and nginx
-RUN apt-get update && apt-get install -y nginx && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get install -y nginx && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Set working directory
 WORKDIR /app
 
-# Install dependencies first (for caching)
+# Install Python dependencies
 RUN uv pip install --system fastapi uvicorn
 
-# Copy the application code
+# Copy application code
 COPY main.py .
 
-# Copy nginx configuration
-COPY nginx-backend.conf /etc/nginx/sites-available/default
+# Configure nginx
+RUN echo 'server {\n\
+    listen 80;\n\
+    server_name localhost;\n\
+    \n\
+    location /purr-posal/api/ {\n\
+        rewrite ^/purr-posal/api/(.*) /$1 break;\n\
+        proxy_pass http://127.0.0.1:8001;\n\
+        proxy_set_header Host $host;\n\
+        proxy_set_header X-Real-IP $remote_addr;\n\
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n\
+        proxy_set_header X-Forwarded-Proto $scheme;\n\
+    }\n\
+}' > /etc/nginx/sites-available/default
 
-# Create startup script
+# Create entrypoint script
 RUN echo '#!/bin/bash\n\
+set -e\n\
 nginx\n\
-uvicorn main:app --host 127.0.0.1 --port 8001' > /start.sh && chmod +x /start.sh
+exec uvicorn main:app --host 127.0.0.1 --port 8001' > /entrypoint.sh && \
+    chmod +x /entrypoint.sh
 
 # Expose nginx port
 EXPOSE 80
 
-# Command to run both nginx and uvicorn
-CMD ["/start.sh"]
+# Run the entrypoint
+ENTRYPOINT ["/entrypoint.sh"]
