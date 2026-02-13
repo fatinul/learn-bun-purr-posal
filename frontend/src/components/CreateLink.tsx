@@ -154,7 +154,7 @@ export default function CreateLink() {
                 className="group relative flex items-center justify-center w-12 h-12 bg-white rounded-2xl hover:bg-pink-50 transition-all hover:-rotate-6 shadow-lg"
               >
                 <img
-                  src="purr-posal/kofi_symbol.svg"
+                  src="https://bun.tinul.net/purr-posal/kofi_symbol.svg"
                   alt="Ko-fi"
                   className="w-6 h-6 group-hover:scale-110 transition-transform"
                 />
@@ -197,7 +197,7 @@ export default function CreateLink() {
 
             <div className="bg-white p-2 rounded-2xl border-4 border-orange-50">
               <img
-                src="/MAE_QR.png"
+                src="${window.location.origin}/MAE_QR.png"
                 alt="Maybank QR"
                 className="w-48 h-48 object-contain rounded-lg"
               />
