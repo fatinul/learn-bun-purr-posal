@@ -3,10 +3,18 @@ import { useParams } from 'react-router-dom';
 import confetti from 'canvas-confetti';
 import { api } from '../utils/api';
 
+// Type definition for the love message data
+interface LoveData {
+  title: string;
+  receiver: string;
+  sender: string;
+  message: string;
+}
+
 // --- LOVE BOX PAGE ---
 export default function LoveBox() {
   const { token } = useParams();
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<LoveData | null>(null);
   const [position, setPosition] = useState('middle');
   const [isAccepted, setIsAccepted] = useState(false);
   const [shouldShake, setShouldShake] = useState(false);
